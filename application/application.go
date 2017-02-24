@@ -77,17 +77,7 @@ func (app Application) ConfigureSMTP(logger lager.Logger) {
 		logger.Fatal("smtp-hello-errored", err)
 	}
 
-	startTLSSupported, _ := mailClient.Extension("STARTTLS")
-
 	mailClient.Quit()
-
-	if !startTLSSupported && app.env.SMTPTLS {
-		logger.Fatal("smtp-config-mismatch", errors.New(`SMTP TLS configuration mismatch: Configured to use TLS over SMTP, but the mail server does not support the "STARTTLS" extension.`))
-	}
-
-	if startTLSSupported && !app.env.SMTPTLS {
-		logger.Fatal("smtp-config-mismatch", errors.New(`SMTP TLS configuration mismatch: Not configured to use TLS over SMTP, but the mail server does support the "STARTTLS" extension.`))
-	}
 }
 
 func (app Application) StartQueueGauge() {
